@@ -1,1 +1,5 @@
- java -XX:+PrintGCDetails GCLogAnalysis 初始参数
+ java -XX:+PrintGCDetails GCLogAnalysis 初始参数 young gc 10次 full gc 4次
+ java -XX:+PrintGCDetails -Xmx 1g _Xms 1g GCLogAnalysis 初始参数 young gc 14次 full gc 1次
+ java -XX:+PrintGCDetails -Xmx256m -Xms256m GCLogAnalysis
+ Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
+ 这里的是java 8 所以默认的是并行gc 原因 young区负责年轻代的垃圾回收，xmx -xms分配的是堆内内存
