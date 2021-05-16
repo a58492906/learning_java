@@ -11,14 +11,47 @@
  CmsGc 产生了5次young gc 
  //开始标记
 2021-05-16T21:51:33.596-0800: [CMS-concurrent-mark-start]
+//并发标记
 2021-05-16T21:51:33.602-0800: [CMS-concurrent-mark: 0.006/0.006 secs] [Times: user=0.01 sys=0.00, real=0.01 secs] 
+//并发预清理
 2021-05-16T21:51:33.602-0800: [CMS-concurrent-preclean-start]
-//并发清理
 2021-05-16T21:51:33.603-0800: [CMS-concurrent-preclean: 0.001/0.001 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
-//并发重制
 2021-05-16T21:51:33.604-0800: [CMS-concurrent-abortable-preclean-start]
 2021-05-16T21:51:33.633-0800: [GC (Allocation Failure) 2021-05-16T21:51:33.633-0800: 
 [ParNew: 314559K->34941K(314560K), 0.0512911 secs] 678124K->466294K(1013632K), 0.0513357 secs] 
 [Times: user=0.28 sys=0.03, real=0.05 secs] 
+//最终标记
+2021-05-16T21:55:44.448-0800: [GC (CMS Final Remark) [YG occupancy: 35099 K (314560 K)]2021-05-16T21:55:44.448-0800: [Rescan (parallel) , 0.0015746 secs]2021-05-16T21:55:44.450-0800: [weak refs processing, 0.0005757 secs]2021-05-16T21:55:44.450-0800: [class unloading, 0.0052072 secs]2021-05-16T21:55:44.455-0800: [scrub symbol table, 0.0006900 secs]2021-05-16T21:55:44.456-0800: [scrub string table, 0.0001581 secs][1 CMS-remark: 442274K(699072K)] 477373K(1013632K), 0.0083370 secs] [Times: user=0.01 sys=0.00, real=0.01 secs] 
+2021-05-16T21:55:44.456-0800: [CMS-concurrent-sweep-start]
+//并发清除
+2021-05-16T21:55:44.457-0800: [CMS-concurrent-sweep: 0.001/0.001 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
+2021-05-16T21:55:44.457-0800: [CMS-concurrent-reset-start]
+//并发重制
+2021-05-16T21:55:44.460-0800: [CMS-concurrent-reset: 0.003/0.003 secs] [Times: user=0.00 sys=0.01, real=0.01 secs] 
+2021-05-16T21:55:44.496-0800: [GC (Allocation Failure) 2021-05-16T21:55:44.496-0800: [ParNew: 314559K->34942K(314560K), 0.0600997 secs] 641015K->430881K(1013632K), 0.0601453 secs] [Times: user=0.39 sys=0.03, real=0.06 secs] 
+2021-05-16T21:55:44.595-0800: [GC (Allocation Failure) 2021-05-16T21:55:44.595-0800: [ParNew: 314558K->34943K(314560K), 0.0965354 secs] 710497K->505550K(1013632K), 0.0965758 secs] [Times: user=0.59 sys=0.06, real=0.10 secs] 
+Cms gc中是会进行一次或多次的young gc，因为cmsgc是并发清理的 
 
-Cms gc中是会进行一次或多次的young gc 
+
+java -XX:+PrintGC -XX:+PrintGCDateStamps  -Xmx1g -Xms1g -XX:+UseG1GC  GCLogAnalysis
+G1 是cms算法的升级
+2021-05-16T21:58:31.797-0800: [GC pause (G1 Evacuation Pause) (young) 539M->352M(1024M), 0.0224787 secs]
+2021-05-16T21:58:31.870-0800: [GC pause (G1 Humongous Allocation) (young) (initial-mark) 649M->416M(1024M), 0.0300342 secs]
+//root 区扫描
+2021-05-16T21:58:31.900-0800: [GC concurrent-root-region-scan-start]
+2021-05-16T21:58:31.900-0800: [GC concurrent-root-region-scan-end, 0.0001428 secs]
+//并发标记
+2021-05-16T21:58:31.900-0800: [GC concurrent-mark-start]
+//转移暂停
+2021-05-16T21:58:32.258-0800: [GC pause (G1 Evacuation Pause) (young)-- 865M->676M(1024M), 0.0307199 secs]
+2021-05-16T21:58:32.290-0800: [GC pause (G1 Evacuation Pause) (mixed) 683M->625M(1024M), 0.0195006 secs]
+2021-05-16T21:58:32.310-0800: [GC pause (G1 Humongous Allocation) (young) (initial-mark) 631M->626M(1024M), 0.0014904 secs]
+ G1gc会在转移暂停把一部分region里的活对象拷贝到空region里去（并行拷贝），
+然后回收原本的region的空间。Evacuation阶段可以自由选择任意多个region来独立收集构成收集集合
+G1的强大之处在于他有一个停顿预测模型，
+他会有选择的挑选部分Region，去尽量满足停顿时间。
+
+G1在堆内存比较大的时候表现出比较高吞吐量和短暂的停顿时间，但是G1 可能会退化成串行gc,退化以后效率急剧降低。
+
+
+
