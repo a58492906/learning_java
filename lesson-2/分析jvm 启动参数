@@ -2,4 +2,23 @@
  java -XX:+PrintGCDetails -Xmx 1g _Xms 1g GCLogAnalysis 初始参数 young gc 14次 full gc 1次
  java -XX:+PrintGCDetails -Xmx256m -Xms256m GCLogAnalysis
  Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
- 这里的是java 8 所以默认的是并行gc 原因 young区负责年轻代的垃圾回收，xmx -xms分配的是堆内内存
+ 这里的是java 8 所以默认的是并行gc 原因 young区负责年轻代的垃圾回收，xmx -xms分配的是堆内内存大小 分配堆内存过小会导致 young gc 频繁 。
+ 如果堆内存太小导致full gc 频繁 程序来不及回收内存。会导致oom直接堆内存溢出程序崩溃
+ 
+ java -XX:+PrintGCDetails -XX:+PrintGCDateStamps  -Xmx1g -Xms1g -XX:+UseSerialGC  GCLogAnalysis 使用单线程 串行GC
+ 产生了young gc 8次，平均每次时间为 0.0689556 secs 相比并行GC 次数少了 没有full gc的次数
+ java -XX:+PrintGCDetails -XX:+PrintGCDateStamps  -Xmx1g -Xms1g -XX:+UseConcMarkSweepGC  GCLogAnalysis 
+ CmsGc 产生了5次young gc 
+ //开始标记
+2021-05-16T21:51:33.596-0800: [CMS-concurrent-mark-start]
+2021-05-16T21:51:33.602-0800: [CMS-concurrent-mark: 0.006/0.006 secs] [Times: user=0.01 sys=0.00, real=0.01 secs] 
+2021-05-16T21:51:33.602-0800: [CMS-concurrent-preclean-start]
+//并发清理
+2021-05-16T21:51:33.603-0800: [CMS-concurrent-preclean: 0.001/0.001 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
+//并发重制
+2021-05-16T21:51:33.604-0800: [CMS-concurrent-abortable-preclean-start]
+2021-05-16T21:51:33.633-0800: [GC (Allocation Failure) 2021-05-16T21:51:33.633-0800: 
+[ParNew: 314559K->34941K(314560K), 0.0512911 secs] 678124K->466294K(1013632K), 0.0513357 secs] 
+[Times: user=0.28 sys=0.03, real=0.05 secs] 
+
+Cms gc中是会进行一次或多次的young gc 
