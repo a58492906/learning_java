@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+        xmlns="http://www.springframework.org/schema/beans"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd">
+
+   <bean id="student" class="bean.definition.Student">
+    <property name="id" value="1"> </property>
+    <property name="name" value="eric"> </property>
+    </bean>
+
+    <bean id="class" class="bean.definition.Class">
+        <property name="id" value="1"> </property>
+        <property name="studentId" value="1"> </property>
+        <property name="name" value="math"> </property>
+        <property name="teacher" value="lisa"> </property>
+    </bean>
+
+    <bean id="school" class="bean.definition.School">
+        <property name="studentId" value="1"> </property>
+        <property name="name" value="math"> </property>
+        <property name="teacherId" value="1"> </property>
+        <property name="classId" value="1"> </property>
+    </bean>
+    <bean id= "objectFactory" class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
+        <property name="targetBeanName" value="student"> </property>
+    </bean>
+    <!--<bean id="superUser" class="org.meng.ioc.overview.denpendency.lookup.SuperUser" parent="student" primary="true">-->
+        <!--<property name="address" value="shanghai"> </property>-->
+    <!--</bean>-->
+
+</beans>
