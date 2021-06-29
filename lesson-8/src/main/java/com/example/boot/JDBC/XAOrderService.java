@@ -30,7 +30,7 @@ public class XAOrderService {
     /**
      * Init.
      */
-    void init() {
+    public  void init() {
         jdbcTemplate.execute("DROP TABLE IF EXISTS t_order");
         jdbcTemplate.execute("CREATE TABLE t_order (order_id BIGINT AUTO_INCREMENT, user_id INT NOT NULL, status VARCHAR(50), PRIMARY KEY (order_id))");
     }
@@ -38,7 +38,7 @@ public class XAOrderService {
     /**
      * Clean up.
      */
-    void cleanup() {
+    public void cleanup() {
         jdbcTemplate.execute("DROP TABLE IF EXISTS t_order");
     }
 
@@ -84,7 +84,7 @@ public class XAOrderService {
      *
      * @return record count
      */
-    int selectAll() {
+    public   int selectAll() {
         return jdbcTemplate.queryForObject("SELECT COUNT(1) AS count FROM t_order", Integer.class);
     }
 }

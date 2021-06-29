@@ -36,7 +36,7 @@
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.example.boot.JDBC.mapper.mysqldb" targetProject="/Users/xuejiameng/learning_java/lesson-8/src/main/java"/>
         
         <!--生成全部表设为% -->
-        <table tableName="tb_order">
+        <table tableName="tb_order_shipping">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
     </context>
