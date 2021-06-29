@@ -6,7 +6,6 @@ package com.example.boot.JDBC;
  * @date 2021-06-28 15:36
  */
 
-import org.apache.shardingsphere.driver.api.yaml.YamlShardingSphereDataSourceFactory;
 import org.apache.shardingsphere.transaction.core.TransactionType;
 import org.apache.shardingsphere.transaction.core.TransactionTypeHolder;
 
@@ -17,6 +16,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import static org.apache.shardingsphere.shardingjdbc.api.yaml.YamlMasterSlaveDataSourceFactory.createDataSource;
 
 public class Transaction2pcXaRawJdbcExampleApplication {
 
@@ -87,7 +88,7 @@ public class Transaction2pcXaRawJdbcExampleApplication {
     static private DataSource getShardingDatasource() throws IOException, SQLException {
         String fileName = "harding-databases-tables.yaml";
         File yamlFile = new File(fileName);
-        return YamlShardingSphereDataSourceFactory.createDataSource(yamlFile);
+        return createDataSource(yamlFile);
     }
 
 }
