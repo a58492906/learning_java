@@ -10,6 +10,7 @@ import io.kimmking.rpcfx.demo.api.OrderService;
 import io.kimmking.rpcfx.demo.api.User;
 import io.kimmking.rpcfx.demo.api.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.List;
@@ -38,6 +39,7 @@ public class RpcfxClientApplication {
 //
 //		//
 //		UserService userService2 = Rpcfx.createFromRegistry(UserService.class, "localhost:2181", new TagRouter(), new RandomLoadBalancer(), new CuicuiFilter());
+
 
 //		SpringApplication.run(RpcfxClientApplication.class, args);
 	}
