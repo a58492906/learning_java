@@ -124,6 +124,8 @@ public final class Rpcfx {
 
 
 
+
+
     public static class CglibProxy implements MethodInterceptor {
 
         public  final MediaType JSONTYPE = MediaType.get("application/json; charset=utf-8");
