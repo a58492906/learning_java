@@ -3,12 +3,14 @@ package io.kimmking.cache.controller;
 import io.kimmking.cache.cache.RedisLockAnnotation;
 import io.kimmking.cache.cache.RedisLockTypeEnum;
 import io.kimmking.cache.entity.User;
+import io.kimmking.cache.pushsub.PushService;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.awt.print.Book;
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +20,8 @@ import java.util.logging.Logger;
 @EnableAutoConfiguration
 public class UserController {
 
-
+   @Resource
+   private  PushService  pushService;
     
     @RequestMapping("/user/find")
     @RedisLockAnnotation(typeEnum = RedisLockTypeEnum.ONE, lockTime = 3)
@@ -28,10 +31,16 @@ public class UserController {
 
     @RequestMapping("/user/list")
     List<User> list() {
-        return Arrays.asList(new User(1,"KK", 28),
+        return Arrays.asList(new User(
+                1,"KK", 28),
                              new User(2,"CC", 18));
     }
 
+    @RequestMapping("pushMsgToAll")
+        String    pushMsgToAll() {
+        pushService.pushMsgToAll("test");
+        return "success";
+    }
 
 
 
